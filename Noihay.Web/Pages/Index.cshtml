@@ -1,0 +1,388 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "NoiHay - Cùng Bé Khám Phá Tiếng Việt Vui Nhộn!";
+}
+
+<!-- Hero Section -->
+<section class="hero-v2 py-5 position-relative overflow-hidden">
+    <div class="hero-bg-decor position-absolute top-0 start-0 w-100 h-100" style="background: radial-gradient(circle at 10% 20%, rgba(77, 150, 255, 0.05) 0%, transparent 50%); z-index: -1;"></div>
+    <div class="container py-lg-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
+                <span class="badge bg-soft-pink text-secondary-dino px-3 py-2 rounded-pill mb-3 font-weight-bold pulse-anim">Chào mừng bé đến với NoiHay! 👋</span>
+                <h1 class="display-2 font-weight-bold mb-4" style="text-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                    Cùng Bé Khám Phá <br/>
+                    <span class="text-primary-dino">Tiếng Việt</span> <span style="color: #E6941A;">Vui Nhộn!</span>
+                </h1>
+                <p class="h4 mb-5 leading-relaxed" style="color: #4B5563; font-weight: 500;">
+                    Giúp trẻ yêu thích ngôn ngữ mẹ đẻ qua các bài học tương tác, <br/>
+                    trò chơi hấp dẫn và câu chuyện bổ ích.
+                </p>
+                <div class="d-flex flex-sm-row flex-column justify-content-center justify-content-lg-start gap-3">
+                    <a href="#lessons" class="btn btn-warning-dino btn-lg px-5 py-3 rounded-pill font-weight-bold shadow-soft">
+                        <i class="bi bi-book-half me-2"></i> Bắt đầu học bài
+                    </a>
+                    <a href="#benefits" class="btn btn-outline-info-dino btn-lg px-5 py-3 rounded-pill font-weight-bold transition-all">
+                        Tìm hiểu thêm
+                    </a>
+                </div>
+                
+                <div class="hero-decor d-none d-lg-block mt-5 pt-3">
+                    <div class="d-flex gap-4 opacity-50">
+                        <span class="fs-1 float-anim">⭐</span>
+                        <span class="fs-2 float-anim" style="animation-delay: 1s;">🎈</span>
+                        <span class="fs-1 float-anim" style="animation-delay: 2s;">🌈</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center position-relative">
+                <div class="hero-blob-frame mx-auto">
+                    <img src="~/images/hero_child.png" class="img-fluid" alt="Bé đang học">
+                </div>
+                <div class="bubble bubble-1 position-absolute top-0 start-0"></div>
+                <div class="bubble bubble-2 position-absolute bottom-0 end-0"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section id="lessons" class="py-5 section-spacer">
+    <div class="container py-5 text-center">
+        <h5 class="text-primary-dino font-weight-bold mb-2">LUYỆN TẬP MỖI NGÀY</h5>
+        <h2 class="display-4 font-weight-bold mb-5 text-dark-blue artistic-underline">
+            Khám phá <span class="text-warning-dino">Chương trình học</span> thú vị
+        </h2>
+        
+        <div class="row g-4 pt-4">
+            @{
+                var cardColors = new[] { "#FF8BA7", "#4D96FF", "#6BCB77", "#FFB72B", "#A29BFE" };
+                var cardIcons = new[] { "/images/dinos/pink.png", "/images/dinos/green.png", "/images/dinos/blue.png", "/images/categories/fruits.png", "/images/categories/sentences.png" };
+                int i = 0;
+            }
+            @foreach (var lesson in Model.Lessons)
+            {
+                var color = cardColors[i % cardColors.Length];
+                var icon = cardIcons[i % cardIcons.Length];
+                i++;
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-glass border-0 p-4 h-100 transition-all cursor-pointer" style="background-color: @color;" onclick="launchGame('lesson', @lesson.Id, '@lesson.Title')">
+                        <div class="card-icon-v2 mb-4 p-4 bg-white-glass rounded-marshmallow float-anim" style="animation-delay: @(i*0.5)s;">
+                            <img src="@icon" class="img-fluid" style="height: 140px; object-fit: contain;" alt="@lesson.Title">
+                        </div>
+                        <div class="card-body p-0">
+                            <h3 class="font-weight-bold h2 mb-3" style="color: #1E293B; text-shadow: 0 1px 2px rgba(255,255,255,0.5);">@lesson.Title</h3>
+                            <p class="mb-4 fs-5" style="color: #374151; font-weight: 500; line-height: 1.6;">@lesson.Description</p>
+                            <button class="btn px-5 py-2 font-weight-bold rounded-pill shadow-sm" style="background-color: #1E293B; color: white;">
+                                Bắt đầu <i class="bi bi-play-circle-fill ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<partial name="_GameModalPartial" />
+
+<link rel="stylesheet" href="~/css/game.css" asp-append-version="true" />
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script src="~/js/game-engine.js" asp-append-version="true"></script>
+
+<!-- Why Choose Us (Benefits) -->
+<section id="benefits" class="py-5 bg-white section-spacer">
+    <div class="container py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="about-image-v2 position-relative">
+                    <div class="frame-decor-blue p-2 rounded-marshmallow shadow-pastel overflow-hidden" style="background: linear-gradient(135deg, #4D96FF, #6BCBFF);">
+                        <img src="~/images/v2/kids_interacting.png" class="img-fluid rounded-marshmallow" alt="Trẻ em học tập">
+                    </div>
+                    <div class="floating-stat-card position-absolute bottom-0 end-0 bg-white p-3 shadow-lg rounded-4 me-n3 mb-n3" style="z-index:2;">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success-soft text-success me-3 p-2 rounded-circle">
+                                <i class="bi bi-person-heart fs-3"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 font-weight-bold">100%</h5>
+                                <p class="text-muted mb-0 small">Bé yêu thích!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h5 class="text-secondary-dino font-weight-bold mb-2">TẠI SAO CHỌN CHÚNG TÔI?</h5>
+                <h2 class="display-4 font-weight-bold mb-4 text-dark-blue">Tại Sao Phụ Huynh Nên Chọn <span class="text-primary-dino">NoiHay</span>?</h2>
+                
+                <div class="feature-stack row g-3 mt-4">
+                    <div class="col-12 pb-3">
+                        <div class="d-flex align-items-start">
+                            <img src="~/images/v2/brain_icon.png" width="60" height="60" class="me-4 shadow-sm rounded-circle p-2 bg-white" alt="">
+                            <div>
+                                <h4 class="font-weight-bold">Phát triển tư duy toàn diện</h4>
+                                <p class="text-muted mb-0">Giúp bé rèn luyện trí nhớ và khả năng phản xạ ngôn ngữ nhanh hơn 40%.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 pb-3">
+                        <div class="d-flex align-items-start">
+                            <img src="~/images/v2/heart_icon.png" width="60" height="60" class="me-4 shadow-sm rounded-circle p-2 bg-white" alt="">
+                            <div>
+                                <h4 class="font-weight-bold">Yêu thích tiếng Việt mỗi ngày</h4>
+                                <p class="text-muted mb-0">Xây dựng tình yêu ngôn ngữ mẹ đẻ thông qua các câu chuyện nhân văn.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-5">
+                    <a href="#" class="btn btn-primary-dino btn-lg px-5 py-3 rounded-pill font-weight-bold shadow-soft">Khám phá chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Values Section (replaces old Stats) -->
+<section class="py-5 section-spacer">
+    <div class="container py-5 text-center">
+        <h5 class="text-primary-dino font-weight-bold mb-2">GIÁ TRỊ CỐT LÕI</h5>
+        <h2 class="display-4 font-weight-bold mb-5 text-dark-blue">Cam kết của <span class="text-warning-dino">NoiHay</span></h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="value-card p-4 rounded-marshmallow shadow-pastel transition-all" style="background-color: var(--soft-mint);">
+                    <div class="mb-3" style="font-size: 50px;">🗺️</div>
+                    <h4 class="font-weight-bold" style="color: #1E293B;">Lộ trình bài bản</h4>
+                    <p class="mb-0" style="color: #4B5563; font-weight: 500; font-size: 0.95rem; line-height: 1.6;">5 bước từ dễ đến khó, phù hợp mọi trình độ của bé.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="value-card p-4 rounded-marshmallow shadow-pastel transition-all" style="background-color: var(--soft-pink);">
+                    <div class="mb-3" style="font-size: 50px;">🎮</div>
+                    <h4 class="font-weight-bold" style="color: #1E293B;">Học qua trò chơi</h4>
+                    <p class="mb-0" style="color: #4B5563; font-weight: 500; font-size: 0.95rem; line-height: 1.6;">Mọi bài học đều là một cuộc phiêu lưu thú vị.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="value-card p-4 rounded-marshmallow shadow-pastel transition-all" style="background-color: var(--butter-yellow);">
+                    <div class="mb-3" style="font-size: 50px;">🤖</div>
+                    <h4 class="font-weight-bold" style="color: #1E293B;">Phát âm chuẩn AI</h4>
+                    <p class="mb-0" style="color: #4B5563; font-weight: 500; font-size: 0.95rem; line-height: 1.6;">AI hỗ trợ 24/7, hướng dẫn bé bất cứ lúc nào.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="value-card p-4 rounded-marshmallow shadow-pastel transition-all" style="background-color: var(--sky-blue);">
+                    <div class="mb-3" style="font-size: 50px;">🛡️</div>
+                    <h4 class="font-weight-bold" style="color: #1E293B;">100% Vui nhộn</h4>
+                    <p class="mb-0" style="color: #4B5563; font-weight: 500; font-size: 0.95rem; line-height: 1.6;">Cam kết bé học không nhàm chán, an toàn tuyệt đối.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Game Section -->
+<section class="py-5 section-spacer">
+    <div class="container py-5">
+        <div class="row g-4">
+            <!-- Game 1: Phù thủy sửa âm -->
+            <div class="col-lg-6">
+                <div class="card game-island border-0 p-5 shadow-pastel position-relative overflow-hidden h-100" style="background: linear-gradient(135deg, #FFB72B 0%, #FFD93D 100%); border-radius: 40px;">
+                    <div class="position-relative" style="z-index: 2;">
+                        <span class="badge bg-white text-warning-dino px-3 py-2 rounded-pill mb-3 font-weight-bold">PHÁT ÂM 🎙️</span>
+                        <h2 class="display-4 font-weight-bold mb-3 text-white">Phù thủy sửa âm</h2>
+                        <p class="h5 mb-4 text-white opacity-90">Giúp Dino nhảy qua vũng nước bằng cách đọc đúng "Mật mã".</p>
+                        <button onclick="launchGame('dino', 0, 'Phù thủy sửa âm')" class="btn btn-light btn-lg px-4 py-2 rounded-pill font-weight-bold text-dark">Chơi ngay!</button>
+                    </div>
+                    <div class="position-absolute bottom-0 end-0 p-3 opacity-20" style="font-size: 100px;">🦖</div>
+                </div>
+            </div>
+            <!-- Game 2: Khỉ con leo núi -->
+            <div class="col-lg-6">
+                <div class="card game-island border-0 p-5 shadow-pastel position-relative overflow-hidden h-100" style="background: linear-gradient(135deg, #6BCB77 0%, #4D96FF 100%); border-radius: 40px;">
+                    <div class="position-relative" style="z-index: 2;">
+                        <span class="badge bg-white text-success px-3 py-2 rounded-pill mb-3 font-weight-bold">CHÍNH TẢ 🍌</span>
+                        <h2 class="display-4 font-weight-bold mb-3 text-white">Khỉ con leo núi</h2>
+                        <p class="h5 mb-4 text-white opacity-90">Giúp Khỉ con hái chuối trên cao bằng cách chọn vần đúng nhé!</p>
+                        <button onclick="launchGame('monkey', 0, 'Khỉ con leo núi')" class="btn btn-light btn-lg px-4 py-2 rounded-pill font-weight-bold text-dark">Bắt đầu!</button>
+                    </div>
+                    <div class="position-absolute bottom-0 end-0 p-3 opacity-20" style="font-size: 100px;">🐒</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Hero */
+    .hero-v2 { padding: 80px 0; }
+    .bg-soft-pink { background-color: #FFF0F5; }
+    .text-secondary-dino { color: #FF8BA7; }
+    .text-warning-dino { color: #FFB72B; }
+    .bg-off-white { background-color: var(--bg-cream); }
+    .bg-success-soft { background-color: #F0FDF4; }
+    .section-spacer { margin-top: 2rem; }
+    
+    .btn-outline-info-dino { border: 3px solid #6BCBFF; color: #4D96FF; }
+    .btn-outline-info-dino:hover { background-color: #6BCBFF; color: white; }
+    .btn-white-pill { background-color: white; color: #333; border: none; transition: all 0.3s; }
+    .btn-white-pill:hover { background-color: #F0F0F0; transform: translateY(-3px); }
+    .btn-primary-dino { background: linear-gradient(135deg, #4D96FF, #6BCBFF); color: white; border: none; }
+    .btn-primary-dino:hover { background: linear-gradient(135deg, #3b82f6, #4D96FF); color: white; transform: translateY(-3px); }
+    
+    /* Blob shape for hero image */
+    .hero-blob-frame {
+        max-width: 500px;
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        overflow: hidden;
+        padding: 8px;
+        background: white;
+        box-shadow: 0 25px 50px rgba(77, 150, 255, 0.2);
+    }
+    .hero-blob-frame img { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    
+    .bubble { width: 80px; height: 80px; background: rgba(77, 150, 255, 0.08); border-radius: 50%; z-index: -1; animation: float 6s ease-in-out infinite; }
+    .bubble-2 { width: 120px; height: 120px; animation-delay: 2s; }
+    
+    /* Glass Cards */
+    .card-glass {
+        border-radius: 40px;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+    .card-glass:hover { transform: translateY(-10px); box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
+    
+    .bg-white-glass { background-color: rgba(255, 255, 255, 0.25); backdrop-filter: blur(5px); }
+    
+    .artistic-underline { position: relative; display: inline-block; }
+    /* === Total UX Offensive: 3D System === */
+    .btn-3d {
+        position: relative;
+        border: none;
+        background: #fff;
+        border-radius: 25px;
+        padding: 15px 30px;
+        font-weight: 700;
+        box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+        transition: all 0.1s;
+        top: 0;
+    }
+    .btn-3d:active {
+        top: 4px;
+        box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+    }
+    .btn-3d-mint { background-color: #A7F3D0; color: #064E3B; box-shadow: 0 8px 0 #6EE7B7; }
+    .btn-3d-pink { background-color: #FBCFE8; color: #831843; box-shadow: 0 8px 0 #F9A8D4; }
+    .btn-3d-warning { background-color: #FEF3C7; color: #92400E; box-shadow: 0 8px 0 #FCD34D; }
+    
+    /* Doodle Background */
+    .doodle-bg-layer {
+        background-image: url('/images/v3/doodle_bg.png');
+        background-size: 400px;
+        opacity: 0.05;
+        z-index: -1;
+        animation: doodle-float 60s linear infinite;
+    }
+    @@keyframes doodle-float {
+        from { background-position: 0 0; }
+        to { background-position: 1000px 1000px; }
+    }
+
+    /* Unified Game Modal */
+    .modal-game {
+        backdrop-filter: blur(15px);
+        background-color: rgba(255, 255, 255, 0.4) !important;
+    }
+    .modal-game-content {
+        border-radius: 50px !important;
+        border: 8px solid white !important;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.1) !important;
+        background-color: #FCFDF7 !important;
+        min-height: 80vh;
+    }
+
+    /* Pulse Mic Animation */
+    .pulse-mic {
+        animation: pulse-red 2s infinite;
+    }
+    @@keyframes pulse-red {
+        0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
+        70% { box-shadow: 0 0 0 20px rgba(244, 63, 94, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+    }
+
+    /* Dino Trail Progress */
+    .dino-trail {
+        height: 12px;
+        background: #D7CCC8;
+        border-radius: 6px;
+        position: relative;
+        margin: 40px 0;
+    }
+    .dino-trail-runner {
+        position: absolute;
+        top: -30px;
+        transition: all 0.5s ease;
+        font-size: 30px;
+    }
+    
+    body.night-mode .modal-game-content {
+        background-color: #1E293B !important;
+        border-color: #334155 !important;
+    }
+    body.night-mode .doodle-bg-layer {
+        opacity: 0.1;
+        filter: invert(1);
+    }
+    /* Value Cards */
+    .value-card:hover { transform: translateY(-8px); }
+    
+    /* Game Island */
+    .game-island { box-shadow: 0 30px 60px rgba(255, 183, 43, 0.3); }
+    
+    /* Night Mode Refinements */
+    body.night-mode { background-color: #0F172A !important; color: #E2E8F0; }
+    body.night-mode .navbar { background-color: #0F172A !important; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    body.night-mode .navbar .nav-link, body.night-mode .navbar .navbar-brand span { color: #F8FAFC !important; }
+    
+    body.night-mode h1, body.night-mode h2, body.night-mode h3, body.night-mode h4 { color: #F8FAFC !important; }
+    body.night-mode p, body.night-mode .text-muted { color: #CBD5E1 !important; }
+    
+    body.night-mode .bg-white { background-color: #1E293B !important; }
+    body.night-mode .bg-off-white { background-color: #0F172A !important; }
+    
+    body.night-mode .card-glass { 
+        border: 1px solid rgba(255,255,255,0.1);
+        filter: brightness(0.9) saturate(1.2);
+    }
+    
+    body.night-mode .hero-blob-frame { 
+        background: #1E293B; 
+        box-shadow: 0 0 40px rgba(59, 130, 246, 0.3); 
+    }
+    
+    body.night-mode .value-card { 
+        background-color: rgba(30, 41, 59, 0.5) !important; 
+        border: 1px solid rgba(255,255,255,0.1); 
+    }
+    
+    body.night-mode .floating-stat-card { background-color: #1E293B !important; color: #F8FAFC; }
+    body.night-mode .floating-stat-card p { color: #94A3B8 !important; }
+    
+    body.night-mode .footer { 
+        background-color: #0B1120 !important; 
+        border-color: rgba(255,255,255,0.05) !important; 
+        color: #94A3B8; 
+    }
+
+    body.night-mode .btn-white-pill,
+    body.night-mode .card-glass .btn {
+        background-color: #F8FAFC !important;
+        color: #0F172A !important;
+        font-weight: 700;
+    }
+</style>

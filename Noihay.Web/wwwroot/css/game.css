@@ -1,0 +1,152 @@
+/* === NoiHay Game Styles (Professional V2) === */
+
+:root {
+    --modal-bg: #FCFDF7;
+    --modal-border: #FFFFFF;
+    --trail-color: #D7CCC8;
+    --3d-shadow: rgba(0, 0, 0, 0.15);
+}
+
+.modal-game-content {
+    border-radius: 50px !important;
+    border: 8px solid var(--modal-border) !important;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15) !important;
+    background-color: var(--modal-bg) !important;
+    min-height: 85vh;
+}
+
+.doodle-bg-layer {
+    background-image: url('/images/v3/doodle_bg.png');
+    background-size: 400px;
+    opacity: 0.08;
+    z-index: -1;
+    animation: doodle-float 60s linear infinite;
+}
+
+@keyframes doodle-float {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 1000px 1000px;
+    }
+}
+
+/* 3D Button System */
+.btn-3d {
+    position: relative;
+    border: none;
+    border-radius: 30px;
+    padding: 18px 35px;
+    font-weight: 800;
+    font-size: 1.25rem;
+    transition: all 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    top: 0;
+    box-shadow: 0 10px 0 var(--3d-shadow);
+}
+
+.btn-3d:active {
+    top: 6px;
+    box-shadow: 0 4px 0 var(--3d-shadow);
+    transform: scale(0.95);
+}
+
+.btn-3d-mint {
+    background-color: #A7F3D0;
+    color: #064E3B;
+    box-shadow: 0 10px 0 #6EE7B7;
+}
+
+.btn-3d-pink {
+    background-color: #FBCFE8;
+    color: #831843;
+    box-shadow: 0 10px 0 #F9A8D4;
+}
+
+.btn-3d-warning {
+    background-color: #FEF3C7;
+    color: #92400E;
+    box-shadow: 0 10px 0 #FCD34D;
+}
+
+/* Effects */
+.pulse-mic {
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7), 0 10px 0 #F9A8D4;
+    }
+
+    70% {
+        box-shadow: 0 0 0 25px rgba(244, 63, 94, 0), 0 10px 0 #F9A8D4;
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(244, 63, 94, 0), 0 10px 0 #F9A8D4;
+    }
+}
+
+/* Progress Trail */
+.dino-trail {
+    height: 16px;
+    background: var(--trail-color);
+    border-radius: 8px;
+    position: relative;
+    margin: 50px 0;
+}
+
+.dino-trail-runner {
+    position: absolute;
+    top: -35px;
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    font-size: 35px;
+}
+
+.asset-frame img {
+    border-radius: 40px;
+    border: 6px solid #fff;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Night Mode Overrides */
+body.night-mode .modal-game-content {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+    --modal-bg: #1E293B;
+}
+
+body.night-mode .doodle-bg-layer {
+    opacity: 0.12;
+    filter: invert(1) brightness(0.8);
+}
+
+.shake {
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
