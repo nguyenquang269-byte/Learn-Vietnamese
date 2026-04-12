@@ -1,0 +1,49 @@
+<div class="modal fade modal-game" id="unifiedGameModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered p-lg-5">
+        <div class="modal-content modal-game-content position-relative overflow-hidden">
+            <!-- Doodle Background Layer -->
+            <div class="doodle-bg-layer position-absolute top-0 start-0 w-100 h-100"></div>
+            
+            <!-- Modal Header: Title & Close -->
+            <div class="modal-header border-0 p-4" style="z-index: 10;">
+                <div class="d-flex align-items-center">
+                    <div class="bg-warning-dino p-2 px-4 rounded-pill me-3 shadow-sm border border-white">
+                        <span id="game-title-label" class="font-weight-bold text-dark fs-5">🎯 Đang học...</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close bg-white rounded-circle p-3 shadow-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body: Content Render Area -->
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center p-4 position-relative" style="z-index: 10;">
+                <div id="game-content-area" class="w-100 text-center" style="max-width: 1000px;">
+                    <!-- Content injected by game-engine.js -->
+                </div>
+            </div>
+
+            <!-- Modal Footer: Standard Controls -->
+            <div class="modal-footer border-0 justify-content-center pb-5" style="z-index: 10;">
+                <div id="game-footer-controls" class="d-flex gap-4">
+                    <!-- Controls injected by game-engine.js -->
+                </div>
+            </div>
+
+            <!-- Dino Trail Progress Indicator -->
+            <div class="container position-absolute bottom-0 start-50 translate-middle-x mb-5" style="z-index: 10; width: 85%;">
+                <div class="dino-trail shadow-sm">
+                    <div id="dino-runner" class="dino-trail-runner">🦖</div>
+                </div>
+            </div>
+            
+            <!-- Energy Bar (Visual decoration) -->
+            <div class="position-absolute top-0 end-0 p-4 mt-5 me-5 d-none d-lg-block" style="z-index: 10;">
+                <div class="energy-bar bg-white-glass p-2 rounded-pill px-3 border border-white d-flex align-items-center gap-2">
+                    <span class="fs-4">⭐</span>
+                    <div class="progress" style="width: 120px; height: 12px; background: rgba(0,0,0,0.05); border-radius: 6px;">
+                        <div id="energy-fill" class="progress-bar bg-warning" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,118 @@
+@page "{id:int}"
+@model Noihay.Web.Pages.Lesson.IndexModel
+@{
+    ViewData["Title"] = Model.Lesson?.Title ?? "Bài học";
+}
+
+<div class="container mt-4">
+    <div class="d-flex align-items-center mb-4">
+        <a asp-page="/Index" class="btn btn-outline-secondary btn-circle mr-3">←</a>
+        <h2 class="mb-0 font-weight-bold text-primary">@Model.Lesson?.Title</h2>
+    </div>
+
+    @if (Model.Lesson != null)
+    {
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Word Slider / Game Area -->
+                <div id="game-container" class="card shadow-lg border-0 rounded-xl p-5 text-center">
+                    <div id="word-display" class="mb-5">
+                        <img id="word-image" src="" alt="Word image" class="img-fluid rounded-lg mb-4 shadow" style="max-height: 300px;">
+                        <h1 id="word-text" class="display-3 font-weight-bold text-dark mb-2">Đang tải...</h1>
+                        <p id="word-hint" class="text-muted italic h4"></p>
+                    </div>
+
+                    <div class="controls d-flex justify-content-center align-items-center mb-5">
+                        <button id="play-audio" class="btn btn-info btn-lg btn-circle-lg mx-3 shadow">🔊</button>
+                        <button id="record-btn" class="btn btn-danger btn-lg btn-circle-extra mx-3 shadow">🎤</button>
+                        <button id="next-word" class="btn btn-success btn-lg btn-circle-lg mx-3 shadow">➜</button>
+                    </div>
+
+                    <div id="feedback-area" class="h3 font-weight-bold" style="min-height: 3.5rem;">
+                        <!-- Feedback text goes here -->
+                    </div>
+                    
+                    <div id="progress-bar" class="progress mt-4" style="height: 10px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        const words = @Html.Raw(Json.Serialize(Model.Lesson?.Words));
+        let currentIndex = 0;
+
+        function updateUI() {
+            if (!words || words.length === 0) return;
+            const word = words[currentIndex];
+            document.getElementById('word-text').innerText = word.text;
+            document.getElementById('word-hint').innerText = word.pronunciationGuide || "";
+            document.getElementById('word-image').src = word.imageUrl || "/images/default_word.png";
+            
+            // Update progress
+            const percent = ((currentIndex + 1) / words.length) * 100;
+            document.querySelector('.progress-bar').style.width = percent + '%';
+            
+            document.getElementById('feedback-area').innerText = "";
+            document.getElementById('feedback-area').style.color = "inherit";
+        }
+
+        document.getElementById('play-audio').onclick = () => {
+            const word = words[currentIndex];
+            const audio = new Audio(word.audioUrl);
+            audio.play().catch(e => console.log("Audio not found, mock playing..."));
+            document.getElementById('feedback-area').innerText = "Nghe nhé...";
+        };
+
+        document.getElementById('record-btn').onclick = async function() {
+            this.classList.add('pulse-recording');
+            document.getElementById('feedback-area').innerText = "Bé nói đi...";
+            document.getElementById('feedback-area').style.color = "#FF6B6B";
+            
+            // In a real app, you would capture audio and send it to the server
+            // Fetch result from PageModel AJAX handler
+            try {
+                const word = words[currentIndex];
+                const response = await fetch(`?handler=Evaluate&text=${encodeURIComponent(word.text)}`);
+                const result = await response.json();
+                
+                this.classList.remove('pulse-recording');
+                document.getElementById('feedback-area').innerText = result.feedback;
+                document.getElementById('feedback-area').style.color = result.isCorrect ? "#4CAF50" : "#FF9800";
+            } catch (e) {
+                this.classList.remove('pulse-recording');
+                document.getElementById('feedback-area').innerText = "Lỗi kỹ thuật rồi! 🐞";
+            }
+        };
+
+        document.getElementById('next-word').onclick = () => {
+            currentIndex = (currentIndex + 1) % words.length;
+            updateUI();
+        };
+
+        // Init
+        updateUI();
+    </script>
+}
+
+<style>
+    .rounded-xl { border-radius: 2rem; }
+    .btn-circle { width: 40px; height: 40px; border-radius: 50%; padding: 0; }
+    .btn-circle-lg { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .btn-circle-extra { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+    
+    .pulse-recording {
+        animation: pulse 1.5s infinite;
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    }
+    
+    @@keyframes pulse {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+</style>

@@ -1,0 +1,181 @@
+@page
+@model Noihay.Web.Pages.Games.KhiConLeoNuiModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Khỉ con leo núi 🐒";
+}
+
+<div class="game-container vertical-scroll overflow-hidden position-relative" style="height: 100vh; background-color: #E2F3E4; margin-top: -80px;">
+    <!-- Forest Background Elements -->
+    <div class="forest-decor">
+        <div class="tree-trunk position-absolute bottom-0 start-50 translate-middle-x" style="width: 120px; height: 100vh; background: #8D6E63; border-radius: 60px 60px 0 0;"></div>
+        <!-- Fireflies for Night Mode -->
+        <div class="firefly night-only position-absolute"></div>
+    </div>
+
+    <!-- Monkey Character -->
+    <div id="monkey-char" class="position-absolute bottom-0 start-50 translate-middle-x transition-all" style="width: 120px; z-index: 10; bottom: 50px;">
+        <img src="~/images/games/monkey.png" class="img-fluid" alt="Khỉ con">
+    </div>
+
+    <!-- Question Area -->
+    <div class="game-ui position-absolute start-50 translate-middle-x w-100 p-4" style="top: 100px; z-index: 20;">
+        <div class="container text-center">
+            <div class="question-card p-4 bg-white rounded-marshmallow shadow-pastel mx-auto" style="max-width: 600px;">
+                <h4 class="text-secondary-dino font-weight-bold mb-2">GIÚP KHỈ HÁI CHUỐI</h4>
+                <h1 id="incomplete-word" class="display-1 font-weight-bold text-primary-dino mb-4">@Model.Questions[0].IncompleteWord</h1>
+                <p id="hint" class="text-muted h5 italic mb-4">"@Model.Questions[0].Hint"</p>
+                
+                <div class="row g-3">
+                    @foreach (var opt in Model.Questions[0].Options)
+                    {
+                        <div class="col-4">
+                            <button class="btn cloud-btn w-100 p-4 rounded-circle shadow-sm h3" onclick="checkAnswer(this, '@opt')">@opt</button>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- Progress -->
+            <div class="mt-4 text-dark-blue font-weight-bold h4">
+                Chuối đã hái: <span id="score-text">0</span> 🍌
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal (Certificate) -->
+    <div class="modal fade" id="certificateModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-marshmallow overflow-hidden shadow-pastel">
+                <div class="certificate-body p-5 text-center bg-white position-relative">
+                    <div class="decor-ribbon position-absolute top-0 end-0 p-4">🏅</div>
+                    <h5 class="text-warning-dino font-weight-bold mb-2">THÀNH TÍCH TUYỆT VỜI</h5>
+                    <h1 class="display-3 font-weight-bold text-primary-dino mb-4">BẰNG KHEN</h1>
+                    <h2 class="mb-4">HIỆP SĨ CHÍNH TẢ</h2>
+                    <div class="certificate-content py-4 border-top border-bottom mb-4">
+                        <p class="h4">Chúc mừng bé đã xuất sắc vượt qua thử thách</p>
+                        <p class="display-6 font-weight-bold text-success">Khỉ con leo núi</p>
+                        <p class="h5 mt-3">Đã học vần: <span id="vần-list" class="text-secondary-dino">...</span></p>
+                    </div>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button class="btn btn-warning-dino px-5 py-3 rounded-pill font-weight-bold scale-hover" onclick="window.location.href='/Index'">Về Trang Chủ</button>
+                        <button class="btn btn-outline-info px-5 py-3 rounded-pill font-weight-bold" onclick="window.print()">In Bằng Khen 🖨️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script>
+    const questions = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Questions));
+    let currentIdx = 0;
+    let score = 0;
+    let monkeysBottom = 50;
+
+    function checkAnswer(btn, answer) {
+        const q = questions[currentIdx];
+        if (answer === q.CorrectAnswer) {
+            score++;
+            document.getElementById('score-text').innerText = score;
+            
+            // Success animation
+            btn.classList.add('bg-success', 'text-white');
+            confetti({
+                particleCount: 50,
+                spread: 40,
+                origin: { y: 0.8 }
+            });
+
+            // Monkey jump up
+            monkeysBottom += 100;
+            document.getElementById('monkey-char').style.bottom = monkeysBottom + "px";
+
+            currentIdx++;
+            if (currentIdx < questions.length) {
+                setTimeout(loadQuestion, 1200);
+            } else {
+                setTimeout(showCertificate, 1500);
+            }
+        } else {
+            // Fail animation
+            btn.classList.add('bg-danger', 'text-white');
+            document.getElementById('monkey-char').classList.add('shake');
+            setTimeout(() => {
+                btn.classList.remove('bg-danger', 'text-white');
+                document.getElementById('monkey-char').classList.remove('shake');
+            }, 500);
+        }
+    }
+
+    function loadQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById('incomplete-word').innerText = q.IncompleteWord;
+        document.getElementById('hint').innerText = `"${q.Hint}"`;
+        
+        // Update buttons
+        const container = document.querySelector('.row.g-3');
+        container.innerHTML = q.Options.map(opt => `
+            <div class="col-4">
+                <button class="btn cloud-btn w-100 p-4 rounded-circle shadow-sm h3" onclick="checkAnswer(this, '${opt}')">${opt}</button>
+            </div>
+        `).join('');
+    }
+
+    function showCertificate() {
+        const vầnList = questions.map(q => q.CorrectAnswer).join(', ');
+        document.getElementById('vần-list').innerText = vầnList;
+        const modal = new bootstrap.Modal(document.getElementById('certificateModal'));
+        modal.show();
+        confetti({
+            particleCount: 200,
+            spread: 160,
+            origin: { y: 0.5 }
+        });
+    }
+
+    window.onload = loadQuestion;
+</script>
+
+<style>
+    .cloud-btn {
+        background-color: #fff;
+        border: 2px solid #6BCBFF;
+        color: #4D96FF;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .cloud-btn:hover {
+        transform: scale(1.1) translateY(-5px);
+        background-color: #EBF4FF;
+    }
+    
+    .shake {
+        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @@keyframes shake {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+        40%, 60% { transform: translate3d(4px, 0, 0); }
+    }
+
+    /* Night Mode overrides for Game */
+    body.night-mode .game-container {
+        background-color: #1A2B48 !important;
+    }
+    body.night-mode .tree-trunk {
+        background: #3E2723 !important;
+    }
+    body.night-mode .firefly {
+        width: 6px;
+        height: 6px;
+        background: #FFEB3B;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #FFEB3B;
+        animation: firefly-blink 3s infinite;
+    }
+    @@keyframes firefly-blink {
+        0%, 100% { opacity: 0; }
+        50% { opacity: 1; }
+    }
+</style>

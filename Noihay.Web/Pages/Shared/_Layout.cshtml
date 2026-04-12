@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NoiHay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Noihay.Web.styles.css" asp-append-version="true" />
+</head>
+<body class="dino-v2">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm sticky-top">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-page="/Index">
+                    <img src="~/images/dinos/green.png" width="40" height="40" class="d-inline-block align-top me-2" alt="">
+                    <span class="h3 mb-0 font-weight-bold text-primary-dino">NoiHay</span>
+                </a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-dark font-weight-bold hover-primary" asp-area="" asp-page="/Index">Trang chủ</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-dark font-weight-bold hover-primary" href="#">Về chúng tôi</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-dark font-weight-bold hover-primary" href="#">Liên hệ</a>
+                        </li>
+                        <li class="nav-item ms-lg-3">
+                            <a class="btn btn-warning-dino px-4 py-2 rounded-pill font-weight-bold shadow-sm scale-hover" href="#">Đăng ký ngay</a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <button id="night-toggle" class="btn btn-outline-secondary rounded-circle p-2 border-0" onclick="toggleNightMode()" title="Chế độ ban đêm">
+                                <span id="mode-icon" style="font-size: 1.3rem;">☀️</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - Noihay.Web - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        function toggleNightMode() {
+            document.body.classList.toggle('night-mode');
+            const icon = document.getElementById('mode-icon');
+            const isNight = document.body.classList.contains('night-mode');
+            icon.innerText = isNight ? '🌙' : '☀️';
+            localStorage.setItem('noihay-night', isNight ? '1' : '0');
+        }
+        // Auto-apply on load
+        if (localStorage.getItem('noihay-night') === '1') {
+            document.body.classList.add('night-mode');
+            document.getElementById('mode-icon').innerText = '🌙';
+        }
+    </script>
+</body>
+</html>
