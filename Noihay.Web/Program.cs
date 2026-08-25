@@ -1,3 +1,13 @@
+var builder = WebApplication.CreateBuilder(args);
+
+// ==== THÊM ĐOẠN NÀY VÀO ====
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "8080"));
+});
+// ============================
+
+// Giữ nguyên toàn bộ phần còn lại của file...
 using Microsoft.EntityFrameworkCore;
 using Noihay.DataAccessLayer;
 using Noihay.DataAccessLayer.Interfaces;
